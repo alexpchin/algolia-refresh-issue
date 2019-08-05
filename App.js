@@ -42,7 +42,7 @@ export default class App extends Component {
           }}
           key={this.state.refreshKey}
         >
-          <ScrollableTabView>
+          <ScrollableTabView style={styles.container}>
             <Index
               indexName="news_"
               indexId="news_1"
@@ -67,8 +67,7 @@ export default class App extends Component {
                 Root: View,
                 props: {
                   style: {
-                    flex: 1,
-                    backgroundColor: "green"
+                    flex: 1
                   }
                 }
               }}
@@ -88,13 +87,18 @@ const HitsNews = connectInfiniteHits(props => (
     extraData={props.hits}
     renderItem={({ item }) => <Hit hit={item} />}
     keyExtractor={(_, index) => index.toString()}
-    ListEmptyComponent={<View style={styles.empty} />}
+    ListEmptyComponent={
+      <View style={styles.empty}>
+        <Text>{props.hits && props.hits.length}</Text>
+      </View>
+    }
     refreshControl={
       <RefreshControl
         refreshing={props.isFetching}
         onRefresh={props.onRefresh}
       />
     }
+    contentContainerStyle={styles.contentContainer}
   />
 ));
 
@@ -105,6 +109,9 @@ const Hit = connectHighlight(props => {
 const styles = StyleSheet.create({
   container: {
     flex: 1
+  },
+  contentContainer: {
+    flexGrow: 1
   },
   item: {
     color: "black",
