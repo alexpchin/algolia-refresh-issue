@@ -14,6 +14,12 @@ import {
   connectHighlight
 } from "react-instantsearch-native";
 import ScrollableTabView from "react-native-scrollable-tab-view";
+import algoliasearch from "algoliasearch/reactnative";
+
+const searchClient = algoliasearch(
+  "ZP039NUGT7",
+  "05df73a40f1c055808be2857410b22fc"
+);
 
 export default class App extends Component {
   state = {
@@ -22,17 +28,20 @@ export default class App extends Component {
   };
 
   onRefresh = () => {
-    this.setState({ isFetching: true }, () =>
-      this.setState({ refreshKey: Date.now(), isFetching: false })
-    );
+    this.setState({ isFetching: true }, () => {
+      // https://www.algolia.com/doc/api-client/advanced/cache-browser-only/javascript/?language=javascript
+      searchClient.clearCache();
+      this.setState({ refreshKey: Date.now(), isFetching: false });
+    });
   };
 
   render() {
     return (
       <SafeAreaView style={styles.container}>
         <InstantSearch
-          appId={"ZP039NUGT7"}
-          apiKey={"05df73a40f1c055808be2857410b22fc"}
+          // appId={"ZP039NUGT7"}
+          // apiKey={"05df73a40f1c055808be2857410b22fc"}
+          searchClient={searchClient}
           indexName="news_"
           root={{
             Root: View,
